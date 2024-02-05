@@ -1,52 +1,49 @@
 import React from "react";
+import { useState } from "react";
 import "./App.css";
-import Button from "./components/Button/Button.jsx";
-import JournalItem from "./components/JournalItem/JournalItem.jsx";
-import CardButton from "./components/CardButton/CardButton.jsx";
 import LeftPanel from "./layouts/LeftPanel/LeftPanel.jsx";
 import Body from "./layouts/Body/Body.jsx";
 import Header from "./components/Header/Header.jsx";
 import JournalList from "./components/JournalList/JournalList.jsx";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton.jsx";
+import JournalForm from "./components/JournalForm/JournalForm.jsx";
+
+const INITIAL_DATA = [
+    {
+        id: 1,
+        title: 'Подготовка к обновлению курсов',
+        text: 'Горное походы открывают красивые виды',
+        date: new Date()
+    },
+    {
+        id: 2,
+        title: 'Поход в горы',
+        text: 'Думал что очень много времени',
+        date: new Date()
+    },
+];
 
 function App() {
-    const data = [
-        {
-            title: 'Подготовка к обновлению курсов',
-            text: 'Горное походы открывают красивые виды',
-            date: new Date()
-        },
-        {
-            title: 'Поход в горы',
-            text: 'Думал что очень много времени',
-            date: new Date()
-        },
-    ];
+    const [items, setItems] = useState(INITIAL_DATA);
+
+    const addItemHandler = item => {
+        setItems(oldItems => [...oldItems, {
+            text: item.text,
+            title: item.title,
+            date: new Date(item.date),
+            id: Math.max(...oldItems.map(i => i.id)) + 1 // Добавляем уникальный айдишник для избежания перерендера
+        }]);
+    };
 
     return (
         <div className='app'>
             <LeftPanel>
                 <Header />
                 <JournalAddButton />
-                <JournalList>
-                    <CardButton>
-                        <JournalItem
-                            title={data[0].title}
-                            text={data[0].text}
-                            date={data[0].date}
-                        />
-                    </CardButton>
-                    <CardButton>
-                        <JournalItem
-                            title={data[1].title}
-                            text={data[1].text}
-                            date={data[1].date}
-                        />
-                    </CardButton>
-                </JournalList>
+                <JournalList items={items} />
             </LeftPanel>
             <Body>
-                Body
+                <JournalForm onSubmit={addItemHandler} />
             </Body>
         </div>
     );
