@@ -9,18 +9,18 @@ import JournalAddButton from "./components/JournalAddButton/JournalAddButton.jsx
 import JournalForm from "./components/JournalForm/JournalForm.jsx";
 
 const INITIAL_DATA = [
-    {
-        id: 1,
-        title: 'Подготовка к обновлению курсов',
-        text: 'Горное походы открывают красивые виды',
-        date: new Date()
-    },
-    {
-        id: 2,
-        title: 'Поход в горы',
-        text: 'Думал что очень много времени',
-        date: new Date()
-    },
+    // {
+    //     id: 1,
+    //     title: 'Подготовка к обновлению курсов',
+    //     text: 'Горное походы открывают красивые виды',
+    //     date: new Date()
+    // },
+    // {
+    //     id: 2,
+    //     title: 'Поход в горы',
+    //     text: 'Думал что очень много времени',
+    //     date: new Date()
+    // },
 ];
 
 function App() {
@@ -31,7 +31,8 @@ function App() {
             text: item.text,
             title: item.title,
             date: new Date(item.date),
-            id: Math.max(...oldItems.map(i => i.id)) + 1 // Добавляем уникальный айдишник для избежания перерендера
+            // Добавляем уникальный айдишник для избежания перерендера
+            id: oldItems.length > 0 ? Math.max(...oldItems.map(i => i.id)) + 1 : 1
         }]);
     };
 
@@ -47,6 +48,6 @@ function App() {
             </Body>
         </div>
     );
-};
+}
 
 export default App;
