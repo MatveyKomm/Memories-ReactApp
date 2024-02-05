@@ -24,6 +24,7 @@ const INITIAL_DATA = [
 ];
 
 function App() {
+
     const [items, setItems] = useState(INITIAL_DATA);
 
     const addItemHandler = item => {
