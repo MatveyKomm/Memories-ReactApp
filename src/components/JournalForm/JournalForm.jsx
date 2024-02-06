@@ -47,9 +47,23 @@ function JournalForm({ onSubmit }) {
 
     return (
         <form className={styles['journal-form']} onSubmit={addJournalItem}>
-            <input type='text' name='title' className={`${styles['input']} ${formValidState.title ? '' : styles['invalid']}`} />
-            <input type='date' name='date' className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`} />
-            <input type='text' name='tag' />
+            <div>
+                <input type='text' name='title' className={`${styles['input-title']} ${formValidState.title ? '' : styles['invalid']}`} />
+            </div>
+            <div className={styles['form-row']}>
+                <label htmlFor='date' className={styles['form-label']}>
+                    <img src='/calendarIcon.png' alt='Иконка календаря' />
+                    <span>Дата</span>
+                </label>
+                <input type='date' name='date' id='date' className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`} />
+            </div>
+            <div className={styles['form-row']}>
+                <label htmlFor='tag' className={styles['form-label']}>
+                    <img src='/folderIcon.png' alt='Иконка метки' />
+                    <span>Метки</span>
+                </label>
+                <input type='text' id='tag' name='tag' className={styles['input']} />
+            </div>
             <textarea name='text' className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
             <Button text='Сохранить' />
         </form>
