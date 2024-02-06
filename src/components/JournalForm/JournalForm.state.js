@@ -30,5 +30,5 @@ export function formReducer(oldState, action) {
                 isFormReadyForSubmit: titleValidity && dateValidity && textValidity
             };
         }
-    }
-}
+    };
+};
