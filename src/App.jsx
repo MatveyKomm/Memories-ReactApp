@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useState } from "react";
 import "./App.css";
 import LeftPanel from "./layouts/LeftPanel/LeftPanel.jsx";
@@ -8,24 +8,26 @@ import JournalList from "./components/JournalList/JournalList.jsx";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton.jsx";
 import JournalForm from "./components/JournalForm/JournalForm.jsx";
 
-const INITIAL_DATA = [
-    // {
-    //     id: 1,
-    //     title: 'Подготовка к обновлению курсов',
-    //     text: 'Горное походы открывают красивые виды',
-    //     date: new Date()
-    // },
-    // {
-    //     id: 2,
-    //     title: 'Поход в горы',
-    //     text: 'Думал что очень много времени',
-    //     date: new Date()
-    // },
-];
-
 function App() {
 
-    const [items, setItems] = useState(INITIAL_DATA);
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem('data'));
+        if (data) {
+            setItems(data.map(item => ({
+                ...item,
+                date: new Date(item.date)
+            })));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!items.length) {
+            return;
+        }
+        localStorage.setItem('data', JSON.stringify(items));
+    }, [items]);
 
     const addItemHandler = item => {
         setItems(oldItems => [...oldItems, {
@@ -52,3 +54,17 @@ function App() {
 }
 
 export default App;
+
+
+// [{
+//     "id": 1,
+//     "title": "Подготовка к обновлению курсов",
+//     "text": "Горное походы открывают красивые виды",
+//     "date": "2024/03/01"
+// },
+// {
+//     "id": 2,
+//     "title": "Поход в горы",
+//     "text": "Думал что очень много времени",
+//     "date": "2024/03/01"
+// }]
