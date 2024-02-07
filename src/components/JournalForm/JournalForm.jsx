@@ -22,38 +22,44 @@ function JournalForm({ onSubmit }) {
     useEffect(() => {
         if (isFormReadyForSubmit) {
             onSubmit(values);
+            dispatchForm({ type: 'CLEAR' });
         }
-    }, [isFormReadyForSubmit]);
+    }, [isFormReadyForSubmit, values, onSubmit]);
+
+    const onChangeHandler = (event) => {
+        dispatchForm({
+            type: 'SET_VALUE',
+            payload: {
+                [event.target.name]: event.target.value
+            }
+        });
+    };
 
     const addJournalItem = (event) => {
         event.preventDefault()
-
-        const formData = new FormData(event.target);
-        const formProps = Object.fromEntries(formData);
-
-        dispatchForm({ type: 'SUBMIT', payload: formProps });
+        dispatchForm({ type: 'SUBMIT' });
     };
 
     return (
         <form className={styles['journal-form']} onSubmit={addJournalItem}>
             <div>
-                <input type='text' name='title' className={`${styles['input-title']} ${isValid.title ? '' : styles['invalid']}`} />
+                <input type='text' onChange={onChangeHandler} value={values.title} name='title' className={`${styles['input-title']} ${isValid.title ? '' : styles['invalid']}`} />
             </div>
             <div className={styles['form-row']}>
                 <label htmlFor='date' className={styles['form-label']}>
                     <img src='/calendarIcon.png' alt='Иконка календаря' />
                     <span>Дата</span>
                 </label>
-                <input type='date' name='date' id='date' className={`${styles['input']} ${isValid.date ? '' : styles['invalid']}`} />
+                <input type='date' onChange={onChangeHandler} value={values.date} name='date' id='date' className={`${styles['input']} ${isValid.date ? '' : styles['invalid']}`} />
             </div>
             <div className={styles['form-row']}>
                 <label htmlFor='tag' className={styles['form-label']}>
                     <img src='/folderIcon.png' alt='Иконка метки' />
                     <span>Метки</span>
                 </label>
-                <input type='text' id='tag' name='tag' className={styles['input']} />
+                <input type='text' onChange={onChangeHandler} value={values.tag} id='tag' name='tag' className={styles['input']} />
             </div>
-            <textarea name='text' className={`${styles['input']} ${isValid.text ? '' : styles['invalid']}`}></textarea>
+            <textarea name='text' onChange={onChangeHandler} value={values.text} className={`${styles['input']} ${isValid.text ? '' : styles['invalid']}`}></textarea>
             <Button text='Сохранить' />
         </form>
     );

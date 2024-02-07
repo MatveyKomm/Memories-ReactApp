@@ -5,9 +5,10 @@ export const INITIAL_STATE = {
         date: true
     },
     values: {
-        text: undefined,
-        title: undefined,
-        date: undefined
+        text: '',
+        title: '',
+        date: '',
+        tag: ''
     },
     isFormReadyForSubmit: false
 };
@@ -17,11 +18,11 @@ export function formReducer(oldState, action) {
         case 'RESET_VALIDITY':
             return { ...oldState, isValid: INITIAL_STATE.isValid };
         case 'SUBMIT': {
-            const textValidity = action.payload.text?.trim().length;
-            const dateValidity = action.payload.date;
-            const titleValidity = action.payload.title?.trim().length;
+            const textValidity = oldState.values.text?.trim().length;
+            const dateValidity = oldState.values.date;
+            const titleValidity = oldState.values.title?.trim().length;
             return {
-                values: action.payload,
+                ...oldState,
                 isValid: {
                     text: textValidity,
                     title: titleValidity,
@@ -30,5 +31,9 @@ export function formReducer(oldState, action) {
                 isFormReadyForSubmit: titleValidity && dateValidity && textValidity
             };
         }
+        case 'CLEAR':
+            return { ...oldState, values: INITIAL_STATE.values, isFormReadyForSubmit: false };
+        case 'SET_VALUE':
+            return { ...oldState, values: { ...oldState.values, ...action.payload }};
     };
 };
