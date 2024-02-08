@@ -7,6 +7,7 @@ import JournalList from "./components/JournalList/JournalList.jsx";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton.jsx";
 import JournalForm from "./components/JournalForm/JournalForm.jsx";
 import {useLocalStorage} from "./hooks/use-localstorage.hooks.js";
+import {UserContextProvider} from "./context/user.context.jsx";
 
 function mapItems(items) {
     if (!items) {
@@ -24,8 +25,7 @@ function App() {
 
     const addItemHandler = item => {
         setItems([...mapItems(items), {
-            text: item.text,
-            title: item.title,
+            ...item,
             date: new Date(item.date),
             // Добавляем уникальный айдишник для избежания перерендера
             id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1
@@ -33,16 +33,18 @@ function App() {
     };
 
     return (
-        <div className='app'>
-            <LeftPanel>
-                <Header />
-                <JournalAddButton />
-                <JournalList items={mapItems(items)} />
-            </LeftPanel>
-            <Body>
-                <JournalForm onSubmit={addItemHandler} />
-            </Body>
-        </div>
+        <UserContextProvider>
+            <div className='app'>
+                <LeftPanel>
+                    <Header/>
+                    <JournalAddButton/>
+                    <JournalList items={mapItems(items)}/>
+                </LeftPanel>
+                <Body>
+                    <JournalForm onSubmit={addItemHandler}/>
+                </Body>
+            </div>
+        </UserContextProvider>
     );
 }
 

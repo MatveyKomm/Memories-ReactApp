@@ -1,8 +1,9 @@
 import styles from './JournalForm.module.css';
-import React, {useEffect, useReducer, useRef} from "react";
+import React, {useContext, useEffect, useReducer, useRef} from "react";
 import Button from '../Button/Button.jsx';
 import { INITIAL_STATE, formReducer } from './JournalForm.state.js';
 import Input from '../Input/Input.jsx';
+import {UserContext} from "../../context/user.context.jsx";
 
 function JournalForm({ onSubmit }) {
     const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
@@ -10,6 +11,7 @@ function JournalForm({ onSubmit }) {
     const titleRef = useRef();
     const dateRef = useRef();
     const textRef = useRef();
+    const { userId } = useContext(UserContext);
 
     const focusError = (isValid) => {
         switch(true) {
@@ -45,6 +47,13 @@ function JournalForm({ onSubmit }) {
         }
     }, [isFormReadyForSubmit, values, onSubmit]);
 
+    useEffect(() => {
+        dispatchForm({
+            type: 'SET_VALUE',
+            payload: { userId }
+        });
+    }, [userId]);
+
     const onChangeHandler = (event) => {
         dispatchForm({
             type: 'SET_VALUE',
@@ -62,24 +71,29 @@ function JournalForm({ onSubmit }) {
     return (
         <form className={styles['journal-form']} onSubmit={addJournalItem}>
             <div>
-                <Input type='text' ref={titleRef} onChange={onChangeHandler} value={values.title} name='title' isValid={isValid.title} appearance='title' />
+                <Input type='text' ref={titleRef} onChange={onChangeHandler} value={values.title} name='title'
+                       isValid={isValid.title} appearance='title'/>
             </div>
             <div className={styles['form-row']}>
                 <label htmlFor='date' className={styles['form-label']}>
-                    <img src='/calendarIcon.png' alt='Иконка календаря' />
+                    <img src='/calendarIcon.png' alt='Иконка календаря'/>
                     <span>Дата</span>
                 </label>
-                <Input type='date' ref={dateRef} onChange={onChangeHandler} value={values.date} name='date' id='date' isValid={isValid.date} />
+                <Input type='date' ref={dateRef} onChange={onChangeHandler} value={values.date} name='date' id='date'
+                       isValid={isValid.date}/>
             </div>
             <div className={styles['form-row']}>
                 <label htmlFor='tag' className={styles['form-label']}>
-                    <img src='/folderIcon.png' alt='Иконка метки' />
+                    <img src='/folderIcon.png' alt='Иконка метки'/>
                     <span>Метки</span>
                 </label>
-                <input type='text' onChange={onChangeHandler} value={values.tag} id='tag' name='tag' className={styles['input']} />
+                <input type='text' onChange={onChangeHandler} value={values.tag} id='tag' name='tag'
+                       className={styles['input']}/>
             </div>
-            <textarea name='text' ref={textRef} onChange={onChangeHandler} value={values.text} isValid={isValid.text} className={`${styles['input']} ${isValid.text ? '' : styles['invalid']}`}></textarea>
-            <Button text='Сохранить' />
+            <textarea name='text' ref={textRef} onChange={onChangeHandler} value={values.text} isValid={isValid.text}
+                      className={`${styles['input']} ${isValid.text ? '' : styles['invalid']}`}>
+            </textarea>
+            <Button text='Сохранить'/>
         </form>
     );
 };
