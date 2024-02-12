@@ -4,7 +4,7 @@ import CardButton from "../CardButton/CardButton.jsx";
 import {useContext} from "react";
 import {UserContext} from "../../context/user.context.jsx";
 
-function JournalList({ items }) {
+function JournalList({ items, setItem }) {
     const { userId } = useContext(UserContext);
 
     if (items.length === 0) {
@@ -17,7 +17,9 @@ function JournalList({ items }) {
 
     return <>
         {items.filter(el => el.userId === userId).sort(sortItems).map(el => (
-            <CardButton key={el.id}>
+            <CardButton key={el.id} onClick={() => {
+                setItem(el)
+            }}>
                 <JournalItem
                     title={el.title}
                     text={el.text}
